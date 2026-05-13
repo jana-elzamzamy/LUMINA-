@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Image Description · Lumina</title>
+  <meta name="description" content="Upload a photo and Lumina will describe what's in it out loud — powered by on-device AI." />
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- TensorFlow.js + COCO-SSD (object detection) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand"><span class="brand-orb" aria-hidden="true"></span> LUMINA</a>
+      <nav aria-label="Primary">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="image.html">Image</a></li>
+
+          <li><a href="sign.html">Sign Language</a></li>
+          <li><a href="tts.html">Read Aloud</a></li>
+          <li><a href="index.html#about">About</a></li>
+        </ul>
+      </nav>
+      <div class="nav-tools">
+        <button class="icon-btn" data-toggle="contrast" aria-label="Toggle high contrast">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" data-toggle="textsize" aria-label="Change text size">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h9v2"/><path d="M8.5 5v14"/><path d="M6 19h5"/><path d="M14 13v-1h7v1"/><path d="M17.5 12v7"/><path d="M16 19h3"/></svg>
+        </button>
+        <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <span class="tag">Feature 1</span>
+        <h1>Image Description</h1>
+        <p>Upload a photo or use your camera. Lumina will detect objects in the image, describe the scene, and read it out loud.</p>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <h3>1. Give Lumina an image</h3>
+
+          <label class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload an image">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <strong>Click or drop an image here</strong>
+            <small>JPG, PNG, WebP — processed privately on your device</small>
+            <input type="file" id="file-input" accept="image/*" />
+          </label>
+
+          <div style="display:flex; gap:0.6rem; margin-top:1rem; flex-wrap:wrap;">
+            <button class="btn btn-sm" id="camera-btn">📷 Use camera</button>
+            <button class="btn btn-sm" id="capture-btn" hidden>Capture</button>
+            <button class="btn btn-sm btn-ghost" id="stop-cam-btn" hidden>Stop camera</button>
+          </div>
+
+          <div class="stage" style="margin-top:1rem;">
+            <video id="video" autoplay playsinline muted hidden></video>
+            <img id="preview" alt="" hidden />
+            <canvas id="overlay"></canvas>
+            <div class="overlay-hint" id="hint">No image yet. Upload one or use your camera to get started.</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>2. Description</h3>
+          <div class="status" id="status"><span class="dot"></span><span id="status-text">Model not loaded yet</span></div>
+
+          <div class="output-box" id="description" style="margin-top:1rem;">
+            The description will appear here after you provide an image.
+          </div>
+
+          <div class="chip-row" id="detected"></div>
+
+          <div style="display:flex; gap:0.6rem; margin-top:1.2rem; flex-wrap:wrap;">
+            <button class="btn btn-primary" id="speak-btn" disabled>🔊 Speak description</button>
+            <button class="btn btn-sm btn-ghost" id="stop-speak-btn">Stop</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:1.5rem;">
+        <h3>How it works</h3>
+        <ol class="steps">
+          <li><span class="num">1</span><div><strong>You give an image.</strong> Either upload a file from your device or open the camera and capture a photo.</div></li>
+          <li><span class="num">2</span><div><strong>Lumina analyzes it.</strong> A TensorFlow.js object detection model (COCO-SSD) runs on your device and finds objects, their position, and confidence.</div></li>
+          <li><span class="num">3</span><div><strong>Lumina describes it.</strong> The results are turned into a natural sentence ("I can see two people and a dog in the center…") and read aloud through the Web Speech API.</div></li>
+        </ol>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="brand"><span class="brand-orb" aria-hidden="true"></span> LUMINA</div>
+      <p>An intelligent platform for accessibility · © 2026</p>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/image.js"></script>
+</body>
+</html>

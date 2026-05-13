@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Read Aloud · Lumina</title>
+  <meta name="description" content="Paste text or upload a file and Lumina will read it out loud with a natural voice." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand"><span class="brand-orb" aria-hidden="true"></span> LUMINA</a>
+      <nav aria-label="Primary">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="image.html">Image</a></li>
+
+          <li><a href="sign.html">Sign Language</a></li>
+          <li><a href="tts.html">Read Aloud</a></li>
+          <li><a href="index.html#about">About</a></li>
+        </ul>
+      </nav>
+      <div class="nav-tools">
+        <button class="icon-btn" data-toggle="contrast" aria-label="Toggle high contrast">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" data-toggle="textsize" aria-label="Change text size">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h9v2"/><path d="M8.5 5v14"/><path d="M6 19h5"/><path d="M14 13v-1h7v1"/><path d="M17.5 12v7"/><path d="M16 19h3"/></svg>
+        </button>
+        <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <span class="tag">Feature 4</span>
+        <h1>Read Aloud</h1>
+        <p>Paste some text or upload a .txt file and Lumina will read it out loud. Perfect for blind users, elderly users, and people with reading difficulties.</p>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <h3>1. Your text</h3>
+
+          <div class="field">
+            <label for="text-input">Type or paste text</label>
+            <textarea id="text-input" placeholder="Write or paste anything here…">Welcome to Lumina, an intelligent platform built to help everyone interact with the world. Press play to hear me read this text out loud.</textarea>
+          </div>
+
+          <div class="field">
+            <label class="dropzone" id="file-drop" tabindex="0" role="button" aria-label="Upload a text file">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <strong>Or drop a .txt file here</strong>
+              <small>Any plain text file will work.</small>
+              <input type="file" id="file-input" accept=".txt,text/plain" />
+            </label>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>2. Voice settings</h3>
+
+          <div class="status" id="status"><span class="dot"></span><span id="status-text">Ready</span></div>
+
+          <div class="field" style="margin-top:1rem;">
+            <label for="voice-select">Voice</label>
+            <select id="voice-select"></select>
+          </div>
+
+          <div class="field">
+            <label for="rate">Speed <span class="val" id="rate-val">1.00</span></label>
+            <div class="slider-row">
+              <input type="range" id="rate" min="0.5" max="2" step="0.05" value="1">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="pitch">Pitch <span class="val" id="pitch-val">1.00</span></label>
+            <div class="slider-row">
+              <input type="range" id="pitch" min="0" max="2" step="0.05" value="1">
+            </div>
+          </div>
+
+          <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:1.2rem;">
+            <button class="btn btn-primary" id="play-btn">▶️ Play</button>
+            <button class="btn btn-sm" id="pause-btn">⏸️ Pause</button>
+            <button class="btn btn-sm" id="resume-btn">Resume</button>
+            <button class="btn btn-sm btn-ghost" id="stop-btn">⏹ Stop</button>
+          </div>
+
+          <p style="margin-top:1rem; color:var(--text-2); font-size:0.85rem;">
+            Tip: the list of voices depends on your browser and operating system.
+            Chrome on Windows usually offers the most voices.
+          </p>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:1.5rem;">
+        <h3>Who it helps</h3>
+        <div class="chip-row">
+          <span class="chip">Blind users</span>
+          <span class="chip">Visually impaired</span>
+          <span class="chip">Elderly users</span>
+          <span class="chip">People with dyslexia</span>
+          <span class="chip">Anyone tired of reading</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="brand"><span class="brand-orb" aria-hidden="true"></span> LUMINA</div>
+      <p>An intelligent platform for accessibility · © 2026</p>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/tts.js"></script>
+</body>
+</html>

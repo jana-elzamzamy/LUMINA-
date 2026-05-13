@@ -1,0 +1,963 @@
+/* ============================================
+   LUMINA — Accessible AI Platform
+   Shared stylesheet (dark modern glow theme)
+   ============================================ */ /* تعريف عام للملف */
+
+/* CSS Variables (ألوان وثوابت التصميم) */
+:root {
+  --bg-0: #07070d; /* لون الخلفية الأساسي الغامق */
+  --bg-1: #0d0d18; /* درجة أفتح شوية من الخلفية */
+  --bg-2: #141424; /* لون بلوكات/كاردات */
+  --bg-3: #1c1c33; /* لون أفتح للعناصر */
+  --surface: rgba(28, 28, 51, 0.55); /* خلفيات شفافة */
+  --surface-hi: rgba(40, 40, 70, 0.7); /* hover خلفية أغمق */
+  --border: rgba(140, 120, 255, 0.18); /* حدود خفيفة */
+  --border-hi: rgba(140, 120, 255, 0.45); /* حدود أوضح عند التفاعل */
+
+  --text-0: #f4f3ff; /* النص الأساسي الأبيض */
+  --text-1: #c9c7e6; /* نص ثانوي */
+  --text-2: #8a88ab; /* نص خافت */
+
+  --brand: #8b5cf6; /* اللون الأساسي للبراند */
+  --brand-2: #22d3ee; /* لون ثانوي (cyan) */
+  --brand-3: #f472b6; /* لون إضافي */
+  --accent: #a78bfa; /* لون روابط وأكشن */
+
+  --good: #34d399; /* نجاح */
+  --warn: #fbbf24; /* تحذير */
+  --bad: #f87171; /* خطأ */
+
+  --radius-sm: 10px; /* زوايا صغيرة */
+  --radius: 18px; /* زوايا عادية */
+  --radius-lg: 28px; /* زوايا كبيرة */
+
+  --shadow-glow: 0 0 40px rgba(139, 92, 246, 0.35),
+                 0 0 80px rgba(34, 211, 238, 0.15); /* glow effect */
+  --shadow-card: 0 20px 60px rgba(0, 0, 0, 0.45); /* ظل الكارد */
+
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif; /* الخط */
+
+  --fs-base: 16px; /* حجم الخط الأساسي */
+  --transition: 240ms cubic-bezier(0.2, 0.8, 0.2, 1); /* حركة الانتقال */
+}
+
+/* High contrast mode (وضع التباين العالي لذوي الإعاقة) */
+html[data-contrast="high"] {
+  --bg-0: #000;
+  --bg-1: #000;
+  --bg-2: #0a0a0a;
+  --bg-3: #111;
+  --surface: #000;
+  --surface-hi: #111;
+  --border: #fff;
+  --border-hi: #fff;
+  --text-0: #fff;
+  --text-1: #fff;
+  --text-2: #eaeaea;
+  --brand: #ffdd00;
+  --brand-2: #00ffff;
+  --accent: #ffdd00;
+  --shadow-glow: none;
+}
+
+/* Large text mode (تكبير الخط) */
+html[data-textsize="large"] { --fs-base: 20px; }
+html[data-textsize="xlarge"] { --fs-base: 24px; }
+
+/* ---------- Reset (تصفير إعدادات المتصفح) ---------- */
+*, *::before, *::after { box-sizing: border-box; } /* حساب الحجم بشكل صحيح */
+html, body { margin: 0; padding: 0; } /* إزالة المسافات الافتراضية */
+html { scroll-behavior: smooth; } /* سكرول ناعم */
+body {
+  font-family: var(--font-sans); /* تطبيق الخط */
+  font-size: var(--fs-base); /* حجم الخط */
+  line-height: 1.6; /* تباعد الأسطر */
+  color: var(--text-1); /* لون النص */
+  background: var(--bg-0); /* خلفية الموقع */
+  min-height: 100vh; /* طول الصفحة كامل */
+  overflow-x: hidden; /* منع السكرول الأفقي */
+  -webkit-font-smoothing: antialiased; /* تحسين شكل الخط */
+}
+
+/* Animated aurora background (خلفية متحركة) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(139, 92, 246, 0.25), transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(34, 211, 238, 0.2), transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(244, 114, 182, 0.18), transparent 45%);
+  filter: blur(60px);
+  z-index: -2;
+  animation: aurora 18s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* حركة الخلفية */
+@keyframes aurora {
+  0%   { transform: translate(0,0) rotate(0deg); }
+  100% { transform: translate(4%,-3%) rotate(3deg); }
+}
+
+/* العناوين */
+h1, h2, h3, h4 {
+  color: var(--text-0); /* لون أبيض واضح */
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 0.6em;
+}
+
+/* أحجام العناوين */
+h1 { font-size: clamp(2.2rem, 5vw, 4rem); letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); letter-spacing: -0.01em; }
+h3 { font-size: 1.25rem; }
+
+/* الفقرات */
+p  { margin: 0 0 1em; }
+
+/* الروابط */
+a  {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+a:hover, a:focus { color: var(--brand-2); }
+
+/* التركيز بالكيبورد */
+:focus-visible {
+  outline: 3px solid var(--brand-2);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Skip link (للوصول السريع لذوي الإعاقة) */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 12px;
+  background: var(--brand);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  z-index: 1000;
+  transition: top var(--transition);
+}
+.skip-link:focus { top: 12px; color: #fff; }
+
+/* ---------- Layout ---------- */
+.container {
+  width: min(1200px, 92%);
+  margin-inline: auto; /* توسيط المحتوى */
+}
+
+/* ---------- Navbar ---------- */
+.navbar {
+  position: sticky; /* يثبت فوق عند السكرول */
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  background: rgba(7, 7, 13, 0.6);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  display: flex; /* ترتيب العناصر أفقي */
+  align-items: center; /* محاذاة العناصر عموديًا في المنتصف */
+  gap: 1.5rem; /* مسافة بين العناصر */
+  padding: 0.9rem 0; /* مسافة داخلية فوق وتحت */
+}
+
+.brand {
+  display: flex; /* يخلي اللوجو والنص جنب بعض */
+  align-items: center; /* توسيط عمودي */
+  gap: 0.65rem; /* مسافة بين الدائرة وكلمة LUMINA */
+  font-weight: 800; /* خط عريض */
+  font-size: 1.25rem; /* حجم الخط */
+  color: var(--text-0); /* لون النص الأساسي */
+  letter-spacing: 0.04em; /* تباعد الحروف */
+}
+
+.brand-orb {
+  width: 28px; height: 28px; /* حجم الدائرة */
+  border-radius: 50%; /* تخليها دائرة */
+  background: radial-gradient(circle at 30% 30%, #fff, var(--brand) 45%, #3b2163 100%); /* تدرج لوني */
+  box-shadow: 0 0 20px var(--brand), 0 0 40px rgba(139,92,246,0.6); /* glow effect */
+  animation: pulse 3s ease-in-out infinite; /* حركة نبض */
+}
+
+/* أنيميشن النبض للـ logo */
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 18px var(--brand), 0 0 36px rgba(139,92,246,0.5); }
+  50%     { box-shadow: 0 0 28px var(--brand-2), 0 0 56px rgba(34,211,238,0.55); }
+}
+
+.nav-links {
+  display: flex; /* يخلي اللينكات في صف */
+  gap: 0.35rem; /* مسافة بين اللينكات */
+  margin-left: auto; /* يدفعها لليمين */
+  list-style: none; /* يشيل النقاط */
+  padding: 0; margin-block: 0; /* إزالة المسافات الافتراضية */
+}
+
+.nav-links a {
+  display: inline-block; /* يخلي كل لينك كأنه زر */
+  padding: 0.5rem 0.9rem; /* مسافة داخلية */
+  border-radius: 999px; /* شكل كبسولة */
+  color: var(--text-1); /* لون النص */
+  font-weight: 500; /* سماكة متوسطة */
+  font-size: 0.95rem; /* حجم الخط */
+}
+
+/* عند المرور أو اختيار الصفحة */
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--text-0); /* لون أبيض */
+  background: var(--surface); /* خلفية شفافة */
+  box-shadow: inset 0 0 0 1px var(--border); /* border داخلي */
+}
+
+.nav-tools {
+  display: flex; /* ترتيب الأزرار جنب بعض */
+  gap: 0.4rem; /* مسافة بين الأزرار */
+  align-items: center; /* توسيط عمودي */
+}
+
+.icon-btn {
+  background: var(--surface); /* خلفية شفافة */
+  border: 1px solid var(--border); /* حدود */
+  color: var(--text-1); /* لون الأيقونة */
+  width: 40px; height: 40px; /* حجم الزر */
+  border-radius: 12px; /* تدوير الزوايا */
+  cursor: pointer; /* شكل اليد */
+  display: inline-flex; /* توسيط المحتوى */
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition); /* حركة ناعمة */
+}
+
+/* hover على الأيقونات */
+.icon-btn:hover, .icon-btn.active {
+  color: var(--text-0); /* أبيض */
+  background: var(--surface-hi); /* أغمق */
+  border-color: var(--border-hi); /* حدود أوضح */
+  box-shadow: 0 0 20px rgba(139,92,246,0.35); /* glow */
+}
+
+.nav-toggle {
+  display: none; /* مخفي في الديسكتوب */
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-0);
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.nav-toggle svg {
+  width: 22px; height: 22px; /* حجم أيقونة القائمة */
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  display: inline-flex; /* يخلي الزر flexible */
+  align-items: center; /* توسيط عمودي */
+  justify-content: center; /* توسيط أفقي */
+  gap: 0.55rem; /* مسافة بين الأيقونة والنص */
+  padding: 0.85rem 1.5rem; /* مسافة داخلية */
+  border-radius: 14px; /* تدوير الزوايا */
+  border: 1px solid var(--border); /* حدود */
+  background: var(--surface); /* خلفية */
+  color: var(--text-0); /* لون النص */
+  font-family: inherit; /* نفس خط الموقع */
+  font-size: 1rem; /* حجم النص */
+  font-weight: 600; /* سُمك الخط */
+  cursor: pointer; /* شكل اليد */
+  transition: all var(--transition); /* حركة ناعمة */
+  text-decoration: none; /* يشيل underline */
+}
+
+/* تأثير عند hover */
+.btn:hover, .btn:focus-visible {
+  background: var(--surface-hi); /* أغمق */
+  border-color: var(--border-hi); /* حدود أوضح */
+  transform: translateY(-2px); /* يطلع لفوق */
+  box-shadow: 0 10px 30px rgba(139,92,246,0.3); /* ظل */
+  color: var(--text-0);
+}
+
+/* عند الضغط */
+.btn:active { transform: translateY(0); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%); /* تدرج لوني */
+  border: none; /* بدون حدود */
+  box-shadow: 0 10px 30px rgba(139,92,246,0.4),
+              inset 0 0 0 1px rgba(255,255,255,0.25); /* glow + highlight */
+  color: #fff;
+}
+
+/* hover للزر الأساسي */
+.btn-primary:hover, .btn-primary:focus-visible {
+  box-shadow: 0 18px 40px rgba(139,92,246,0.55),
+              inset 0 0 0 1px rgba(255,255,255,0.3);
+  color: #fff;
+}
+
+.btn-ghost { background: transparent; } /* زر شفاف */
+
+.btn-sm {
+  padding: 0.55rem 1rem; /* أصغر من العادي */
+  font-size: 0.9rem;
+  border-radius: 10px;
+}
+
+/* زر disabled */
+.btn:disabled {
+  opacity: 0.5; /* باهت */
+  cursor: not-allowed; /* ممنوع الضغط */
+  transform: none;
+  box-shadow: none;
+}
+/* ---------- Hero ---------- */
+
+.hero {
+  padding: clamp(3rem, 8vw, 6.5rem) 0 clamp(3rem, 6vw, 5rem); /* مسافة مرنة فوق وتحت حسب حجم الشاشة */
+  text-align: center; /* توسيط كل محتوى الهيرو */
+  position: relative; /* عشان العناصر الداخلية المتحركة */
+}
+
+/* النص الصغير فوق العنوان */
+.hero .eyebrow {
+  display: inline-flex; /* يخليها في سطر واحد بشكل مرن */
+  align-items: center; /* توسيط عمودي */
+  gap: 0.5rem; /* مسافة بين العناصر */
+  padding: 0.45rem 0.9rem; /* مسافة داخلية */
+  border-radius: 999px; /* شكل كبسولة */
+  background: var(--surface); /* خلفية شفافة */
+  border: 1px solid var(--border); /* حدود خفيفة */
+  color: var(--text-1); /* لون النص */
+  font-size: 0.85rem; /* حجم صغير */
+  font-weight: 500; /* وزن متوسط */
+  margin-bottom: 1.5rem; /* مسافة تحت */
+}
+
+/* النقطة الصغيرة اللي بتعمل animation */
+.hero .eyebrow .dot {
+  width: 8px; height: 8px; /* حجم النقطة */
+  border-radius: 50%; /* دائرة */
+  background: var(--good); /* لون أخضر */
+  box-shadow: 0 0 10px var(--good); /* glow */
+  animation: blink 1.6s ease-in-out infinite; /* وميض */
+}
+
+/* حركة الوميض */
+@keyframes blink {
+  0%, 100% { opacity: 1; } /* واضح */
+  50% { opacity: 0.3; } /* يخف */
+}
+
+/* تدرج في كلمة من العنوان */
+.hero h1 .grad {
+  background: linear-gradient(135deg, #fff 0%, var(--brand) 40%, var(--brand-2) 80%); /* gradient */
+  -webkit-background-clip: text; /* يخلي التدرج داخل النص */
+  background-clip: text;
+  color: transparent; /* يخفي اللون الأساسي */
+}
+
+/* النص التوضيحي */
+.hero .lead {
+  max-width: 720px; /* عرض محدود */
+  margin: 1.2rem auto 2.2rem; /* توسيط + مسافات */
+  font-size: clamp(1rem, 1.5vw, 1.2rem); /* حجم مرن */
+  color: var(--text-1); /* لون خفيف */
+}
+
+/* أزرار الهيرو */
+.hero-actions {
+  display: flex; /* ترتيب أفقي */
+  gap: 0.8rem; /* مسافة بين الأزرار */
+  justify-content: center; /* توسيط */
+  flex-wrap: wrap; /* يسمح بالنزول تحت في الموبايل */
+}
+
+/* ---------- Sections ---------- */
+
+/* كل section في الصفحة */
+.section {
+  padding: clamp(3rem, 7vw, 6rem) 0; /* padding مرن حسب الشاشة */
+}
+
+/* عنوان أي section */
+.section-header {
+  text-align: center; /* توسيط */
+  max-width: 720px; /* عرض محدود */
+  margin: 0 auto 3rem; /* توسيط + مسافة تحت */
+}
+
+/* الفقرة داخل العنوان */
+.section-header p {
+  color: var(--text-2); /* لون أفتح */
+}
+
+/* ---------- Feature cards grid ---------- */
+
+/* شبكة الكروت */
+.grid {
+  display: grid; /* نظام grid */
+  gap: 1.5rem; /* مسافة بين الكروت */
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* responsive تلقائي */
+}
+
+/* الكارت نفسه */
+.card {
+  position: relative; /* عشان effects */
+  padding: 1.8rem; /* مسافة داخلية */
+  border-radius: var(--radius); /* زوايا مدورة */
+  background: var(--surface); /* خلفية شفافة */
+  border: 1px solid var(--border); /* حدود */
+  backdrop-filter: blur(12px); /* blur */
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform var(--transition),
+              border-color var(--transition),
+              box-shadow var(--transition); /* حركة ناعمة */
+  overflow: hidden; /* يمنع خروج المؤثرات */
+}
+
+/* تأثير الإضاءة داخل الكارت */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(139,92,246,0.22), transparent 40%); /* glow متحرك */
+  opacity: 0;
+  transition: opacity var(--transition);
+  pointer-events: none;
+}
+
+/* hover على الكارت */
+.card:hover {
+  transform: translateY(-6px); /* يطلع لفوق */
+  border-color: var(--border-hi); /* حدود أوضح */
+  box-shadow: var(--shadow-card); /* ظل */
+}
+
+/* تشغيل glow عند hover */
+.card:hover::before { opacity: 1; }
+
+/* عنوان الكارت */
+.card h3 { margin-top: 0.8rem; }
+
+/* نص الكارت */
+.card p {
+  color: var(--text-1);
+  margin-bottom: 1.2rem;
+}
+
+/* الأيقونة داخل الكارت */
+.card .card-icon {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center; /* توسيط */
+  background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(34,211,238,0.18)); /* gradient */
+  border: 1px solid var(--border-hi);
+  box-shadow: 0 0 30px rgba(139,92,246,0.25);
+  font-size: 1.6rem;
+}
+
+/* الكارت كأنه لينك */
+.card.feature-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* يمنع تغيير اللون عند hover */
+.card.feature-link:hover { color: inherit; }
+
+/* زر داخل الكارت */
+.card .card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--brand-2);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* سهم بعد النص */
+.card .card-cta::after {
+  content: "→";
+  transition: transform var(--transition);
+}
+
+/* حركة السهم */
+.card:hover .card-cta::after {
+  transform: translateX(4px);
+}
+
+/* ---------- Tool page layout ---------- */
+
+/* صفحة الأدوات */
+.tool-page {
+  padding: clamp(2rem, 5vw, 4rem) 0;
+}
+
+/* عنوان الصفحة */
+.tool-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+/* التاج الصغير فوق العنوان */
+.tool-header .tag {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-2);
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* البانل (الكروت الكبيرة) */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.2rem, 3vw, 2rem);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-card);
+}
+
+/* مسافة بين بانل والتاني */
+.panel + .panel { margin-top: 1.5rem; }
+
+/* عنوان داخل البانل */
+.panel h3 { margin-top: 0; }
+
+/* تصميم عمودين */
+.two-col {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr; /* موبايل: عمود واحد */
+}
+
+/* في الشاشات الكبيرة */
+@media (min-width: 900px) {
+  .two-col {
+    grid-template-columns: 1.15fr 0.85fr; /* عمودين بنسبة مختلفة */
+  }
+}
+/* ---------- Forms ---------- */
+
+/* ستايل الليبل (اسم الحقول) */
+label { 
+  display: block; 
+  font-weight: 600; 
+  color: var(--text-0); 
+  margin-bottom: 0.4rem; 
+  font-size: 0.95rem; 
+}
+
+/* ستايل كل input / textarea / select في الفورم */
+input[type="text"], 
+input[type="file"], 
+textarea, 
+select {
+  width: 100%; /* يخلي العنصر بعرض الفورم */
+  padding: 0.75rem 1rem; /* مسافات داخلية مريحة */
+  border-radius: 12px; /* حواف دائرية */
+  background: var(--bg-2); /* لون الخلفية */
+  border: 1px solid var(--border); /* حدود خفيفة */
+  color: var(--text-0); /* لون النص */
+  font-family: inherit; 
+  font-size: 1rem;
+  transition: border-color var(--transition), box-shadow var(--transition); /* انيميشن عند التفاعل */
+}
+
+/* textarea أكبر و قابل للتوسيع عمودي */
+textarea { 
+  min-height: 180px; 
+  resize: vertical; 
+  line-height: 1.6; 
+}
+
+/* لما المستخدم يضغط على أي input */
+input:focus, textarea:focus, select:focus {
+  outline: none; /* إزالة outline الافتراضي */
+  border-color: var(--brand); /* تغيير لون البوردر */
+  box-shadow: 0 0 0 4px rgba(139,92,246,0.22); /* glow effect */
+}
+
+/* مسافة بين الحقول */
+.field + .field { margin-top: 1rem; }
+
+/* سطر السلايدر (speed/pitch) */
+.slider-row { 
+  display: flex; 
+  align-items: center; 
+  gap: 1rem; 
+}
+
+/* يخلي slider ياخد باقي المساحة */
+.slider-row input[type="range"] { 
+  flex: 1; 
+  accent-color: var(--brand); 
+}
+
+/* الرقم اللي بيعرض القيمة */
+.slider-row .val { 
+  min-width: 44px; 
+  text-align: right; 
+  color: var(--text-2); 
+  font-variant-numeric: tabular-nums; 
+}
+
+
+/* Upload dropzone */
+
+/* منطقة رفع الملفات */
+.dropzone {
+  border: 2px dashed var(--border-hi); /* dashed border */
+  border-radius: var(--radius);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: rgba(139,92,246,0.05);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+/* تأثير hover أو drag */
+.dropzone:hover, .dropzone.is-drag {
+  background: rgba(139,92,246,0.12);
+  border-color: var(--brand);
+}
+
+/* أيقونة داخل dropzone */
+.dropzone svg { 
+  width: 40px; 
+  height: 40px; 
+  color: var(--brand); 
+  margin-bottom: 0.6rem; 
+}
+
+/* العنوان داخل dropzone */
+.dropzone strong { 
+  color: var(--text-0); 
+  display: block; 
+  margin-bottom: 0.3rem; 
+}
+
+/* النص الصغير */
+.dropzone small { color: var(--text-2); }
+
+/* إخفاء input file الحقيقي */
+.dropzone input[type="file"] { display: none; }
+
+
+/* ---------- Video / canvas stages ---------- */
+
+/* الحاوية اللي فيها الفيديو والكاميرا */
+.stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3; /* نسبة العرض */
+  background: var(--bg-2);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+/* الفيديو + الكانفس + الصورة فوق بعض */
+.stage video,
+.stage canvas,
+.stage img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* خلفية الفيديو */
+.stage video,
+.stage img { background: #000; }
+
+/* canvas للرسم (hand tracking) */
+.stage canvas { 
+  pointer-events: none; 
+  background: transparent; 
+}
+
+/* رسالة لما الكاميرا مقفولة */
+.stage .overlay-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-2);
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.95rem;
+  background: repeating-linear-gradient(
+    45deg, transparent 0 18px, rgba(255,255,255,0.018) 18px 36px
+  );
+}
+
+
+/* ---------- Status / output ---------- */
+
+/* صندوق الحالة (loading / ready / error) */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  color: var(--text-1);
+}
+
+/* الدائرة الصغيرة */
+.status .dot {
+  width: 10px; 
+  height: 10px; 
+  border-radius: 50%;
+  background: var(--text-2);
+}
+
+/* حالات مختلفة */
+.status.is-loading .dot { 
+  background: var(--warn); 
+  box-shadow: 0 0 10px var(--warn); 
+  animation: blink 1.2s infinite; 
+}
+
+.status.is-ready .dot { 
+  background: var(--good); 
+  box-shadow: 0 0 10px var(--good); 
+}
+
+.status.is-error .dot { 
+  background: var(--bad);  
+  box-shadow: 0 0 10px var(--bad); 
+}
+
+
+/* صندوق عرض النتيجة */
+.output-box {
+  padding: 1.2rem;
+  border-radius: 14px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  color: var(--text-0);
+  min-height: 70px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* نسخة كبيرة من output */
+.output-box.big { 
+  font-size: 1.5rem; 
+  font-weight: 600; 
+  text-align: center; 
+}
+
+
+/* Chips (tags صغيرة) */
+.chip-row { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 0.5rem; 
+  margin-top: 0.8rem; 
+}
+
+.chip {
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(139,92,246,0.15);
+  border: 1px solid var(--border-hi);
+  color: var(--text-0);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+
+/* ---------- Steps ---------- */
+
+/* خطوات الشرح */
+.steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+/* كل خطوة */
+.steps li {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  padding: 0.8rem 1rem;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+/* رقم الخطوة */
+.steps .num {
+  flex-shrink: 0;
+  width: 30px; 
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  color: #fff;
+  display: grid; 
+  place-items: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+
+/* ---------- About / Team ---------- */
+
+/* شبكة فريق العمل */
+.about-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+/* كارت عضو الفريق */
+.team-card {
+  text-align: center;
+  padding: 1.8rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+/* صورة / حرف داخل الدائرة */
+.team-card .avatar {
+  width: 90px; 
+  height: 90px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  display: grid;
+  place-items: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 0 30px rgba(139,92,246,0.5);
+}
+
+/* اسم الشخص */
+.team-card h3 { margin-bottom: 0.2rem; }
+
+/* الدور / ID */
+.team-card .role { 
+  color: var(--text-2); 
+  font-size: 0.9rem; 
+}
+/* ---------- Footer ---------- */
+
+/* تصميم الفوتر (آخر الصفحة) */
+.footer {
+  margin-top: 4rem; /* مسافة فوق الفوتر */
+  padding: 2.5rem 0 2rem; /* مسافات داخلية */
+  border-top: 1px solid var(--border); /* خط فاصل فوق الفوتر */
+  text-align: center; /* توسيط المحتوى */
+  color: var(--text-2); /* لون النص */
+  font-size: 0.9rem; /* تصغير الخط */
+}
+
+/* تعديل شكل اللوجو داخل الفوتر */
+.footer .brand { 
+  justify-content: center; /* توسيط العناصر */
+  margin-bottom: 0.8rem; /* مسافة تحت اللوجو */
+}
+
+
+/* ---------- Responsive ---------- */
+
+/* للشاشات الصغيرة (موبايل / تابلت صغير) */
+@media (max-width: 780px) {
+
+  /* زرار المينيو (الهامبرجر) يظهر في الموبايل */
+  .nav-toggle { 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+  }
+
+  /* قائمة التنقل في الموبايل */
+  .nav-links {
+    position: absolute; /* تظهر فوق الصفحة */
+    top: 100%; /* تحت النافبار */
+    left: 0; 
+    right: 0; /* تاخد عرض الشاشة */
+    flex-direction: column; /* تخلي اللينكات تحت بعض */
+    gap: 0.2rem; /* مسافة صغيرة بين العناصر */
+    padding: 0.8rem; /* مسافات داخلية */
+    background: var(--bg-1); /* خلفية غامقة */
+    border-bottom: 1px solid var(--border); /* خط تحت */
+    transform: translateY(-10px); /* تبدأ مخفية لفوق */
+    opacity: 0; /* مخفية */
+    pointer-events: none; /* غير قابلة للضغط وهي مقفولة */
+    transition: all var(--transition); /* انيميشن فتح/قفل */
+  }
+
+  /* لما القائمة تتفتح */
+  .nav-links.is-open { 
+    opacity: 1; /* تظهر */
+    transform: translateY(0); /* ترجع مكانها الطبيعي */
+    pointer-events: auto; /* تبقى قابلة للضغط */
+  }
+
+  /* شكل اللينكات في الموبايل */
+  .nav-links a { 
+    display: block; 
+    padding: 0.8rem 1rem; /* مساحة أكبر للمس */
+  }
+}
+
+
+/* ---------- Reduced Motion ---------- */
+
+/* لو المستخدم مفعّل تقليل الحركة (accessibility setting) */
+@media (prefers-reduced-motion: reduce) {
+
+  /* إلغاء أو تقليل كل الانيميشن */
+  *, *::before, *::after {
+    animation-duration: 0.001s !important; /* شبه إيقاف */
+    transition-duration: 0.001s !important; /* تقليل الحركة */
+  }
+}

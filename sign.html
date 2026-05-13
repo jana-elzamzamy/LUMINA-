@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Language · Lumina</title>
+  <meta name="description" content="Show a hand gesture to your camera and Lumina will recognize it and speak it out loud." />
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- TensorFlow.js + Handpose (hand keypoint detection) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@4.20.0/dist/tf-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@4.20.0/dist/tf-converter.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@4.20.0/dist/tf-backend-webgl.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose@0.0.7/dist/handpose.min.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="brand"><span class="brand-orb" aria-hidden="true"></span> LUMINA</a>
+      <nav aria-label="Primary">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="image.html">Image</a></li>
+
+          <li><a href="sign.html">Sign Language</a></li>
+          <li><a href="tts.html">Read Aloud</a></li>
+          <li><a href="index.html#about">About</a></li>
+        </ul>
+      </nav>
+      <div class="nav-tools">
+        <button class="icon-btn" data-toggle="contrast" aria-label="Toggle high contrast">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20z" fill="currentColor"/></svg>
+        </button>
+        <button class="icon-btn" data-toggle="textsize" aria-label="Change text size">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h9v2"/><path d="M8.5 5v14"/><path d="M6 19h5"/><path d="M14 13v-1h7v1"/><path d="M17.5 12v7"/><path d="M16 19h3"/></svg>
+        </button>
+        <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="tool-page">
+    <div class="container">
+      <div class="tool-header">
+        <span class="tag">Feature 3</span>
+        <h1>Sign Language Translation</h1>
+        <p>Show one of these gestures to your camera. Lumina detects your hand in real time and turns the sign into text and speech.</p>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <h3>1. Show a gesture</h3>
+
+          <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
+            <button class="btn btn-sm" id="start-btn">📷 Start camera</button>
+            <button class="btn btn-sm btn-ghost" id="stop-btn" hidden>Stop camera</button>
+          </div>
+
+          <div class="stage" style="margin-top:1rem;">
+            <video id="video" autoplay playsinline muted hidden></video>
+            <canvas id="canvas"></canvas>
+            <div class="overlay-hint" id="hint">Camera is off. Press "Start camera" to begin detecting hand gestures.</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>2. Detected sign</h3>
+          <div class="status" id="status"><span class="dot"></span><span id="status-text">Model not loaded</span></div>
+
+          <div class="output-box big" id="current-sign" style="margin-top:1rem;">—</div>
+
+          <h3 style="margin-top:1.2rem;">History</h3>
+          <div class="output-box" id="history" style="min-height:80px; font-size:1rem;">
+            Your recognized signs will appear here.
+          </div>
+
+          <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:1rem;">
+            <button class="btn btn-primary" id="speak-btn">🔊 Speak history</button>
+            <button class="btn btn-sm btn-ghost" id="clear-btn">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:1.5rem;">
+        <h3>Supported gestures</h3>
+        <p>This demo recognizes six simple gestures based on which fingers are extended. Keep your hand facing the camera with your palm forward.</p>
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+          <div class="card"><div class="card-icon">✋</div><h3>Open hand</h3><p>Hello</p></div>
+          <div class="card"><div class="card-icon">✊</div><h3>Fist</h3><p>Yes</p></div>
+          <div class="card"><div class="card-icon">👍</div><h3>Thumbs up</h3><p>Good</p></div>
+          <div class="card"><div class="card-icon">✌️</div><h3>Peace</h3><p>Two / Peace</p></div>
+          <div class="card"><div class="card-icon">☝️</div><h3>Index</h3><p>One</p></div>
+          <div class="card"><div class="card-icon">🤟</div><h3>I love you</h3><p>Love</p></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:1.5rem;">
+        <h3>How it works</h3>
+        <ol class="steps">
+          <li><span class="num">1</span><div><strong>Hand detection.</strong> TensorFlow.js loads the Handpose model, which finds 21 landmarks on your hand (knuckles and fingertips) on every video frame.</div></li>
+          <li><span class="num">2</span><div><strong>Finger state.</strong> Lumina checks which fingers are extended vs. curled by comparing landmark positions.</div></li>
+          <li><span class="num">3</span><div><strong>Gesture + speech.</strong> The pattern of extended fingers maps to a sign, which is shown on screen and read out loud.</div></li>
+        </ol>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="brand"><span class="brand-orb" aria-hidden="true"></span> LUMINA</div>
+      <p>An intelligent platform for accessibility · © 2026</p>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/sign.js"></script>
+</body>
+</html>
